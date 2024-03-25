@@ -1,0 +1,515 @@
+openapi: 3.0.3
+info:
+  title: Django DRF WeatherForecasting
+  version: 0.0.0
+paths:
+  /Doctors-list-by-hospital/{hospital_id}/:
+    get:
+      operationId: Doctors_list_by_hospital_retrieve
+      parameters:
+      - in: path
+        name: hospital_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Doctors-list-by-hospital
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /Hospital-list/:
+    get:
+      operationId: Hospital_list_retrieve
+      tags:
+      - Hospital-list
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /add-departments/:
+    post:
+      operationId: add_departments_create
+      tags:
+      - add-departments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /available-slots/{doctor_id}/{day}/:
+    get:
+      operationId: available_slots_retrieve
+      parameters:
+      - in: path
+        name: day
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: doctor_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - available-slots
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /book-appointment/:
+    post:
+      operationId: book_appointment_create
+      tags:
+      - book-appointment
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /cancel-appointment/{appointment_id}/:
+    delete:
+      operationId: cancel_appointment_destroy
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - cancel-appointment
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /create-prescription/{appointment_id}/:
+    post:
+      operationId: create_prescription_create
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - create-prescription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Prescription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Prescription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Prescription'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /doctor-appointments/:
+    get:
+      operationId: doctor_appointments_retrieve
+      tags:
+      - doctor-appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /doctor-detail/{doctor_id}/:
+    get:
+      operationId: doctor_detail_retrieve
+      parameters:
+      - in: path
+        name: doctor_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - doctor-detail
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /doctor-register/:
+    post:
+      operationId: doctor_register_create
+      tags:
+      - doctor-register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+  /hospital-register/:
+    post:
+      operationId: hospital_register_create
+      tags:
+      - hospital-register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hospital'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Hospital'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Hospital'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+          description: ''
+  /list-departments-of-authenticated-hospital/:
+    get:
+      operationId: list_departments_of_authenticated_hospital_retrieve
+      tags:
+      - list-departments-of-authenticated-hospital
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /list-doctors-of-authenticated-hospital/:
+    get:
+      operationId: list_doctors_of_authenticated_hospital_retrieve
+      tags:
+      - list-doctors-of-authenticated-hospital
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /list-doctors-prescription/:
+    get:
+      operationId: list_doctors_prescription_retrieve
+      tags:
+      - list-doctors-prescription
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /list-patient-appointments/:
+    get:
+      operationId: list_patient_appointments_retrieve
+      tags:
+      - list-patient-appointments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /list-patient-prescription/:
+    get:
+      operationId: list_patient_prescription_retrieve
+      tags:
+      - list-patient-prescription
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /login/:
+    post:
+      operationId: login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenObtainPair'
+          description: ''
+  /patient-register/:
+    post:
+      operationId: patient_register_create
+      tags:
+      - patient-register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Patient'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+          description: ''
+  /prescription-detail/{prescription_id}/:
+    get:
+      operationId: prescription_detail_retrieve
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - prescription-detail
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /search-doctors/:
+    get:
+      operationId: search_doctors_retrieve
+      tags:
+      - search-doctors
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /search-hospital/:
+    get:
+      operationId: search_hospital_retrieve
+      tags:
+      - search-hospital
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /time_choices/:
+    get:
+      operationId: time_choices_retrieve
+      tags:
+      - time_choices
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    Admin:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+      - username
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/Admin'
+        specialization:
+          type: string
+          nullable: true
+          maxLength: 255
+        department:
+          type: integer
+          nullable: true
+        degree:
+          type: string
+          nullable: true
+          maxLength: 255
+        consultant_type:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - id
+      - user
+    Hospital:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/Admin'
+        address:
+          type: string
+          nullable: true
+          maxLength: 255
+        phone_number:
+          type: string
+          maxLength: 20
+        contact_information:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - id
+      - phone_number
+      - user
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/Admin'
+      required:
+      - id
+      - user
+    Prescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient:
+          type: integer
+          readOnly: true
+        doctor:
+          type: integer
+          readOnly: true
+        appointment:
+          type: integer
+          readOnly: true
+        hospital:
+          type: integer
+          readOnly: true
+        medicines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrescriptionMedicine'
+        advice:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - appointment
+      - doctor
+      - hospital
+      - id
+      - medicines
+      - patient
+    PrescriptionMedicine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        medicine_name:
+          type: string
+          maxLength: 100
+        dosage:
+          type: string
+          maxLength: 100
+        times:
+          type: array
+          items: {}
+        condition:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        end_date:
+          type: string
+          readOnly: true
+      required:
+      - condition
+      - duration
+      - end_date
+      - id
+      - medicine_name
+      - times
+    UserTokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
