@@ -25,8 +25,11 @@ urlpatterns = [
     path('prescription-detail/<int:prescription_id>/', PrescriptionDetailAPIView.as_view(), ),
 
     path('time_choices/', Get_time_choices.as_view(), ),
+<<<<<<< HEAD
     
     path('n/', test, ),
+=======
+>>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
 
 
 ]

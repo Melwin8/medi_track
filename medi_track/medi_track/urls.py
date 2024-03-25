@@ -16,16 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+<<<<<<< HEAD
 from drf_spectacular.views import *
+=======
+>>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('users.urls')),
     path('',include('patient.urls')),
     path('',include('doctor.urls')),
+<<<<<<< HEAD
     
     
     path('medi_track/schema/',SpectacularAPIView.as_view(),name='schema'),
     path('medi_track/schema/docs/',SpectacularSwaggerView.as_view(url_name='schema')),
     
+=======
+>>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
 ]

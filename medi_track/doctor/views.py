@@ -85,6 +85,7 @@ class PrescriptionDetailAPIView(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Prescription.DoesNotExist:
+<<<<<<< HEAD
             return Response(" not found.", status=status.HTTP_404_NOT_FOUND)
         
 
@@ -94,3 +95,6 @@ from django.http import HttpResponse
 def test(request):
     send_notification_based_on_times.delay()
     return HttpResponse("doneeee")
+=======
+            return Response(" not found.", status=status.HTTP_404_NOT_FOUND)
+>>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8

@@ -57,10 +57,13 @@ class Prescription(models.Model):
 
     def __str__(self):
         return f"Prescription for {self.patient.name} by Dr. {self.doctor.name}"
+<<<<<<< HEAD
     
     
 class Notification(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     content = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)
+=======
+>>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
 
