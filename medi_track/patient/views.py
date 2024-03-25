@@ -122,6 +122,7 @@ class AvailableSlotsAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ListPatientAppointmentsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsPatientUser]
     def get(self, request, *args, **kwargs):
         try:
             appointments = Appointment.objects.filter(user=request.user.patient)
@@ -129,6 +130,7 @@ class ListPatientAppointmentsAPIView(APIView):
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except:
             return Response({"status":0,"data":"Something went wrong"}, status=status.HTTP_404_NOT_FOUND)
+
 class CancelAppointmentAPIView(APIView):
     permission_classes = [IsAuthenticated, IsPatientUser]
     def delete(self, request, appointment_id, *args, **kwargs):

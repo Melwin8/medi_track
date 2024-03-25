@@ -31,10 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
+
     # 'jazzmin',
-=======
->>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,13 +44,12 @@ INSTALLED_APPS = [
     'users','patient','doctor',
     'rest_framework','rest_framework_simplejwt',
     'corsheaders',
-<<<<<<< HEAD
+
     'django_celery_results',
     'django_celery_beat',
     'drf_spectacular',
     
-=======
->>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
+
 
 ]
 
@@ -142,18 +141,16 @@ AUTH_USER_MODEL='users.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':('rest_framework_simplejwt.authentication.JWTAuthentication',),
-<<<<<<< HEAD
+
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
 }
 SPECTACULAR_SETTINGS={
     'TITLE':'Django DRF WeatherForecasting',
 }
 
-=======
-}
 
 
->>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=600),  # Set the access token lifetime
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),  # Set the refresh token lifetime to 7 days
@@ -171,7 +168,6 @@ CORS_ALLOW_METHODS = (
     "PATCH",
     "POST",
     "PUT",
-<<<<<<< HEAD
 )
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # Redis broker URL
@@ -192,6 +188,4 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1'),  # Run every minute, adjust as needed
     },
 }
-=======
-)
->>>>>>> 1e14084bebf544b132c260d8daedbbdafc2520c8
+
