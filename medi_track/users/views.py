@@ -11,21 +11,77 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 # Create your views here.
 
 
-class UserloginView(TokenObtainPairView):
+# class UserloginView(TokenObtainPairView):
+#     serializer_class = UserTokenObtainPairSerializer
+
+# class PatientRegistrationView(generics.CreateAPIView):
+#     queryset = Patient.objects.all()
+#     serializer_class =PatientSerializer
+
+# class HospitalRegistrationView(generics.CreateAPIView):
+#     queryset = Hospital.objects.all()
+#     serializer_class = HospitalSerializer
+
+# class DoctorRegistrationView(generics.CreateAPIView):
+#     queryset = Doctor.objects.all()
+#     serializer_class = DoctorSerializer
+#     permission_classes = [IsAuthenticated,IsHospitalUser]
+
+class UserloginView(APIView):
     serializer_class = UserTokenObtainPairSerializer
 
-class PatientRegistrationView(generics.CreateAPIView):
-    queryset = Patient.objects.all()
-    serializer_class =PatientSerializer
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                # Perform any additional logic if needed
+                return Response({"status": 1, "data": serializer.validated_data}, status=status.HTTP_200_OK)
+            else:
+                return Response({"status": 0, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
-class HospitalRegistrationView(generics.CreateAPIView):
-    queryset = Hospital.objects.all()
-    serializer_class = HospitalSerializer
+class PatientRegistrationView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = PatientSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": 1, "message": "Patient registered successfully."}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status": 0, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+        
 
-class DoctorRegistrationView(generics.CreateAPIView):
-    queryset = Doctor.objects.all()
-    serializer_class = DoctorSerializer
-    permission_classes = [IsAuthenticated,IsHospitalUser]
+class HospitalRegistrationView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = HospitalSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": 1, "message": "Hospital registered successfully."}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status": 0, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)        
+        
+
+class DoctorRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, IsHospitalUser]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = DoctorSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": 1, "message": "Doctor registered successfully."}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status": 0, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 
@@ -45,8 +101,10 @@ class DepartmentCreateAPIView(APIView):
                 serializer.save(hospital=hospital)
                 return Response({"status":1,"data":serializer.data}, status=status.HTTP_201_CREATED)
             return Response({"status":0,"error":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response("Something went wrong.", status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 class DepartmentListofAuthenticatedHospitalAPIView(APIView):
     permission_classes = [IsAuthenticated, IsHospitalUser]
@@ -58,7 +116,7 @@ class DepartmentListofAuthenticatedHospitalAPIView(APIView):
             serializer = DepartmentSerializer(departments, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Hospital.DoesNotExist:
-            return Response("Hospital does not exist for the current user.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status": 0, "errors": "Hospital does not exist for the current user."}, status=status.HTTP_404_NOT_FOUND)
 
 class DoctorListofAuthenticatedHospitalAPIView(APIView):
     permission_classes = [IsAuthenticated, IsHospitalUser]
@@ -70,7 +128,8 @@ class DoctorListofAuthenticatedHospitalAPIView(APIView):
             serializer = listDoctorSerializer(doctors, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Hospital.DoesNotExist:
-            return Response("Doctors does not exist for the current user.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status": 0, "errors": "not exist"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # return Response("Doctors does not exist for the current user.", status=status.HTTP_404_NOT_FOUND)
 
 class DoctorDetailAPIView(APIView):
     permission_classes = [IsAuthenticated,]
@@ -80,7 +139,7 @@ class DoctorDetailAPIView(APIView):
             doctor = Doctor.objects.get(pk=doctor_id)
             # Serialize the doctor's data
             serializer = DoctorSerializer(doctor)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Doctor.DoesNotExist:
-            return Response("Doctor not found.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": 0, "errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

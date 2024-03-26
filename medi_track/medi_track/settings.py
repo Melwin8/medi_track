@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(jxaa)8swl-fyt_1cq6kf3jv9fxdu1v9wu*%3xdns&d5ar-z^x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -182,10 +182,16 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'  # Use
 
 from celery.schedules import crontab
 
+# CELERY_BEAT_SCHEDULE = {
+#     'send-medicine-time-reminders': {
+#         'task': 'doctor.tasks.send_notification_based_on_times',
+#         'schedule': crontab(minute='*/1'),  # Run every minute, adjust as needed
+#     },
+# }
+
 CELERY_BEAT_SCHEDULE = {
-    'send-medicine-time-reminders': {
-        'task': 'doctor.tasks.send_notification_based_on_times',
-        'schedule': crontab(minute='*/1'),  # Run every minute, adjust as needed
+    'print-hello-world': {
+        'task': 'doctor.tasks.print_hello_world',
+        'schedule': 60.0,  # Every 60 seconds (1 minute)
     },
 }
-

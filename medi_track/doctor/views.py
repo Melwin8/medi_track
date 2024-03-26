@@ -18,7 +18,7 @@ class DoctorAppointmentsListAPIView(APIView):
             serializer = AppointmentSerializer(appointments, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 from datetime import datetime
 class Get_time_choices(APIView):
@@ -56,9 +56,9 @@ class PrescriptionCreateAPIView(APIView):
                 serializer.save(**data)
 
                 return Response({"status":1,"data":serializer.data}, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status":0,"error":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -71,7 +71,7 @@ class DoctorPrescriptionsListAPIView(APIView):
             serializer = DetailedPrescriptionSerializer(prescription, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class PrescriptionDetailAPIView(APIView):
@@ -83,18 +83,18 @@ class PrescriptionDetailAPIView(APIView):
 
             serializer = DetailedPrescriptionSerializer(prescription)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Prescription.DoesNotExist:
 
-            return Response(" not found.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status":0,"errors":"does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
 
-from .tasks import *
-from django.shortcuts import render    
-from django.http import HttpResponse   
-def test(request):
-    send_notification_based_on_times.delay()
-    return HttpResponse("doneeee")
+# from .tasks import *
+# from django.shortcuts import render    
+# from django.http import HttpResponse   
+# def test(request):
+#     send_notification_based_on_times.delay()
+#     return HttpResponse("doneeee")
 
-            # return Response(" not found.", status=status.HTTP_404_NOT_FOUND)
+#             # return Response(" not found.", status=status.HTTP_404_NOT_FOUND)
 

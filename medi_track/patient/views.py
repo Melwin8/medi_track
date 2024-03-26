@@ -20,7 +20,7 @@ class HospitalListAPIView(APIView):
             serializer = AllHospitalSerializer(hospitals, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Hospital.DoesNotExist:
-            return Response("Hospitals does not exist.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status":0,"errors":"Hospitals does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DoctorListofHospitalAPIView(APIView):
@@ -31,7 +31,7 @@ class DoctorListofHospitalAPIView(APIView):
             serializer = DoctorsSerializer(doctors,many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Doctor.DoesNotExist:
-            return Response("Doctors not found.", status=status.HTTP_404_NOT_FOUND)
+            return Response({"status":0,"errors":"Doctors does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class SearchHospitalAPIView(APIView):
@@ -47,7 +47,7 @@ class SearchHospitalAPIView(APIView):
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Exception as e:
             # Handle any exceptions and return an error response
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class SearchDoctorsAPIView(APIView):
@@ -66,10 +66,10 @@ class SearchDoctorsAPIView(APIView):
                 return Response([], status=status.HTTP_200_OK)
 
             serializer = DoctorsSerializer(doctors, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -105,21 +105,26 @@ class BookAppointmentAPIView(APIView):
 class AvailableSlotsAPIView(APIView):
     permission_classes = [IsAuthenticated,]
     def get(self, request, doctor_id, day, *args, **kwargs):
-        # Get all time slots for the given day and doctor
-        all_time_slots = [
-            {"time": choice[0], "is_booked": False}
-            for choice in TIME_CHOICES
-        ]
-        # Mark booked time slots as "is_booked: True"
-        booked_slots = Appointment.objects.filter(doctor_id=doctor_id, day=day)
-        for booked_slot in booked_slots:
-            time = booked_slot.time
-            for slot in all_time_slots:
-                if slot["time"] == time:
-                    slot["is_booked"] = True
+        try:
+            # Get all time slots for the given day and doctor
+            all_time_slots = [
+                {"time": choice[0], "is_booked": False}
+                for choice in TIME_CHOICES
+            ]
+            # Mark booked time slots as "is_booked: True"
+            booked_slots = Appointment.objects.filter(doctor_id=doctor_id, day=day)
+            for booked_slot in booked_slots:
+                time = booked_slot.time
+                for slot in all_time_slots:
+                    if slot["time"] == time:
+                        slot["is_booked"] = True
 
-        serializer = AvailableSlotsSerializer(all_time_slots, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = AvailableSlotsSerializer(all_time_slots, many=True)
+            return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
+        except:
+            return Response({"status":0,"data":"Something went wrong"}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 class ListPatientAppointmentsAPIView(APIView):
     permission_classes = [IsAuthenticated, IsPatientUser]
@@ -154,4 +159,4 @@ class PatientPrescriptionsListAPIView(APIView):
             serializer = PrescriptionSerializer(prescription, many=True)
             return Response({"status":1,"data":serializer.data}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status":0,"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
